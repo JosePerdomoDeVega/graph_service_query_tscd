@@ -1,0 +1,6 @@
+logfire
+boto3
+pydantic
+pydantic-settings
+fastapi
+uvicorn
