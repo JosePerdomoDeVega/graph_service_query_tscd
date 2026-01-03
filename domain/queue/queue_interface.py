@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from domain.models.job import JobRequest
+from domain.models.job_models import JobRequest
 
 
 class QueueInterface(ABC):

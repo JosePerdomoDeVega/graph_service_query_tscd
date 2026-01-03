@@ -3,7 +3,7 @@ import datetime
 import boto3
 from typing import override
 from domain.datalake.datalake_interface import DataLakeInterface
-from domain.models.record import DataLakeRecord
+from domain.models.record_models import DataLakeRecord
 from domain.settings.settings import get_settings
 from services.logger.logger import get_logger
 
@@ -39,7 +39,7 @@ class S3DataLake(DataLakeInterface):
             )
 
     @override
-    def add_record(self, record: DataLakeRecord) -> None:
+    def add_record(self, record: DataLakeRecord) -> str:
         """
         Persist a record in S3 using a date-based prefix.
         """
@@ -53,7 +53,18 @@ class S3DataLake(DataLakeInterface):
             ContentType="application/json"
         )
 
-        logger.info("Record stored in datalake", bucket=self.bucket_name, key=key, record_id=record.record_id)
+        logger.info("Record stored in datalake", bucket=self.bucket_name, key=key, record_id=record.record_id,
+                    **record.data)
+        return key
+
+    def get_record(self, key: str) -> DataLakeRecord:
+        record = self.s3_client.get_object(
+            Bucket=self.bucket_name,
+            Key=key)['Body'].read().decode()
+
+        record = json.loads(record)
+
+        return DataLakeRecord(record_id=record.get('job_id'), data=record)
 
     @override
     def get_prefix(self) -> str:

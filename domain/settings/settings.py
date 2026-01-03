@@ -18,6 +18,7 @@ class Settings(BaseSettings):
 
     logfire_token: Optional[str] = None
     environment: Optional[str] = None
+    auth_token: Optional[str] = None
 
     def __init__(self, **data):
         super().__init__(**data)

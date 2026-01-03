@@ -1,7 +1,7 @@
 import json
 import boto3
 from typing import override
-from domain.models.job import JobRequest
+from domain.models.job_models import JobRequest
 from domain.queue.queue_interface import QueueInterface
 from domain.settings.settings import get_settings
 from services.logger.logger import get_logger

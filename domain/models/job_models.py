@@ -2,27 +2,34 @@ from pydantic import BaseModel, HttpUrl, model_validator
 from typing import Any, Dict, Optional, List
 
 
-class Job(BaseModel):
+class JobResult(BaseModel):
     job_id: str
     operation: str
+    storage_key: str
     payload: Dict[str, Any]
     callback_url: str
+    result: dict[str, Any]
+    errors: dict[str, Any]
 
     def to_dict(self) -> Dict[str, Any]:
         return dict(
             job_id=self.job_id,
             operation=self.operation,
+            storage_key=self.storage_key,
             payload=self.payload,
             callback_url=self.callback_url,
+            result=self.result,
+            errors=self.errors
         )
 
 
 class JobRequest(BaseModel):
     job_id: Optional[str] = None
+    storage_key: Optional[str] = None
     operation: str
-    start_word: Optional[str] = None
-    end_word: Optional[str] = None
-    max_depth: Optional[int] = 10
+    origin_word: Optional[str] = None
+    destination_word: Optional[str] = None
+    max_depth: Optional[int] = None
     degree: Optional[int] = None
     callback_url: HttpUrl
 
@@ -36,7 +43,7 @@ class JobRequest(BaseModel):
             raise ValueError(f"Invalid operation: {op}. Must be one of {VALID_OPERATIONS}")
 
         if op in ["min_path", "all_paths", "max_distance"]:
-            if not model.start_word or not model.end_word:
+            if not model.origin_word or not model.destination_word:
                 raise ValueError(f"Operation '{op}' requires 'start_word' and 'end_word'")
 
         if op == "nodes_by_connectivity" and model.degree is None:
@@ -47,18 +54,14 @@ class JobRequest(BaseModel):
     def to_dict(self) -> Dict[str, Any]:
         return dict(
             job_id=self.job_id,
+            storage_key=self.storage_key,
             operation=self.operation,
-            start_word=self.start_word,
-            end_word=self.end_word,
+            origin_word=self.origin_word,
+            destination_word=self.destination_word,
             max_depth=str(self.max_depth),
             degree=str(self.degree),
             callback_url=str(self.callback_url)
         )
-
-
-class JobResponse(BaseModel):
-    job_id: str
-    status: str = "queued"
 
 
 VALID_OPERATIONS: List[str] = [
