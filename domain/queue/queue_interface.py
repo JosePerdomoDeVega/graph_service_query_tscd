@@ -5,7 +5,7 @@ from domain.models.job_models import JobRequest
 class QueueInterface(ABC):
 
     @abstractmethod
-    def enqueue(self, job: JobRequest) -> None:
+    async def enqueue(self, job: JobRequest) -> None:
         """
         Send a job to the queue.
         """

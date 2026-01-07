@@ -21,7 +21,7 @@ async def health_check():
 
     try:
         sqs = SQSQueue()
-        sqs.sqs_client.get_queue_attributes(
+        sqs.session.get_queue_attributes(
             QueueUrl=sqs.queue_url,
             AttributeNames=["QueueArn"]
         )

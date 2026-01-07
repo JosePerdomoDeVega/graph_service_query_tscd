@@ -1,6 +1,11 @@
+httpx
+locust
 logfire
-boto3
+boto3==1.42.24
+aioboto3==15.5.0
 pydantic
 pydantic-settings
 fastapi
 uvicorn
+pytest
+pytest-cov
