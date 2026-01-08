@@ -23,6 +23,6 @@ async def return_result_to_callback_url(callback_url: str, result: JobResult):
     async with httpx.AsyncClient() as client:
         r = await client.post(callback_url, data=json.dumps(result.to_dict()), timeout=httpx.Timeout(30.0))
         if r.status_code != 200:
-            raise Exception(f'HTTP status code {r.status_code}: {r.text}')
+            logger.exception(f'HTTP status code {r.status_code}: {r.text}')
         else:
-            return 200
+            logger.info('JobResult successfully send to callback url', **result.to_dict())
